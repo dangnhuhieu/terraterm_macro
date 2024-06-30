@@ -1,0 +1,14 @@
+; =================================================
+; コマンドを実行し、RCコードを戻す
+; =================================================
+flushrecv
+sendln CMD
+pause 1
+wait '#' '$'
+sendln 'echo $?'
+pause 1
+wait '#' '$'
+sendln ''
+recvln
+recvln
+str2int RC inputstr

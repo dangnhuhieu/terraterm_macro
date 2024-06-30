@@ -1,0 +1,145 @@
+; マクロ変数設定
+include 'env.ttl'
+
+
+; OUTMODE - 0:コマンド結果を一つのファイルに出力
+;           1:コマンド結果を各サーバ毎のファイルに出力
+; MSG = 'コマンド結果の出力方法指定。\n[はい]   : 1つのファイルに出力。\n[いいえ] : サーバ毎にファイルを分けて出力。'
+; strspecial MSG
+; yesnobox MSG 'コマンド結果の出力方法指定'
+; if result=1 then
+;    OUTMODE=0
+; else
+   OUTMODE=1
+; endif
+
+; サーバリストファイルを開く
+fileopen fpSRV ENVLIST 0 1
+while 1
+
+    ; 1行読み込む。最後の行に達した場合は処理を抜ける。
+    filereadln fpSRV line_srv
+    if result=1 then 
+          break
+    endif
+    
+    ; 空行、コメント行は無視する。
+    strmatch line_srv '(^$|^#.*$)'
+    if result=1 then 
+        continue
+    endif
+
+    ; CSVの各カラムを取得
+    strsplit line_srv ','
+    ENVID    = groupmatchstr1
+    HOSTNAME = groupmatchstr2
+    IPAddr   = groupmatchstr3
+    USER     = groupmatchstr4
+    PASSWORD = groupmatchstr5
+      
+    ;出力ファイル名生成
+    if OUTMODE=1 then
+        sprintf2 OUTFILE '%s\%s\result_%s_%s.txt' MACROPATH OUTFLDR YMDHMS HOSTNAME
+    else
+        sprintf2 OUTFILE '%s\%s\result_%s.txt'    MACROPATH OUTFLDR YMDHMS
+    endif
+
+    ; ステータス表示
+	statusbox HOSTNAME '実行中'
+
+    ; コマンドファイル内のコマンド実行
+    call EXEC_CMDFILE
+
+endwhile
+
+; サーバリストファイルクローズ
+fileclose fpSRV
+
+; messagebox '処理が完了しました。' '完了'
+
+end
+
+; =================================================
+; コマンドファイル内のコマンド実行
+; =================================================
+:EXEC_CMDFILE
+
+; ミリ秒sleep。sleepしないと接続2サーバ目が接続できない。
+mpause 200
+
+; サーバへ接続
+sprintf2 COMMAND '%s:22 /ssh /2 /auth=password /user=%s /passwd=%s /I' IPAddr USER PASSWORD
+connect COMMAND
+
+; rootによる実行されるコマンドをサーバへ送信するまで待つ
+; wait '#' '$'
+wait '#' '$'
+
+; 事前作業
+; include 'prepare.ttl'
+
+; rootによる実行されるコマンドをサーバへ送信するまで待つ
+; wait '#' '$'
+; wait '#' '$'
+
+
+; 出力ファイルオープン(追加書き込み)
+logopen OUTFILE 0 1
+
+sprintf2 MSG #13#10'==================================================='#13#10'--%s %s--'#13#10 ENVID HOSTNAME
+logwrite MSG
+    
+; コマンドリストファイルを開く
+fileopen fpCMD CMDLIST 0 1
+while 1
+
+    ; 1行読み込む。最後の行に達した場合は処理を抜ける。
+    filereadln fpCMD line_cmd
+    if result=1 then 
+          break
+    endif
+    
+    ; 空行、コメント行は無視する。
+    strmatch line_cmd '(^$|^#.*$)'
+    if result=1 then 
+        continue
+    endif
+
+    ; コマンド送信
+    sendln
+    wait '#' '$'
+	CMD=line_cmd
+	include 'exec_cmd.ttl'
+    ;sendln line_cmd
+	if RC != 0 then 
+		setexitcode EXIT_ERROR
+		; 出力ファイルクローズ    
+		logclose
+			
+		; コマンドファイルクローズ
+		fileclose fpCMD
+
+		; 事後作業
+		; include 'end_func.ttl'
+
+		; サーバから切断
+		disconnect 0
+		exit
+	endif
+    wait '#' '$'
+
+endwhile
+
+; 出力ファイルクローズ    
+logclose
+    
+; コマンドファイルクローズ
+fileclose fpCMD
+
+; 事後作業
+; include 'end_func.ttl'
+
+; サーバから切断
+disconnect 0
+
+return

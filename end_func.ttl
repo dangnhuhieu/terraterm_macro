@@ -1,0 +1,37 @@
+; =================================================
+; 事後作業
+; =================================================
+sprintf2 SOURFILE '%s/%s_result.tar.gz' R_TOOL_PATH HOSTNAME
+sprintf2 DESTFORDER '%s\%s\' MACROPATH OUTFLDR
+sprintf2 LOCALPATH '%s\%s\%s_result.tar.gz' MACROPATH OUTFLDR HOSTNAME
+; 受信ファイルが存在する場合削除
+filesearch LOCALPATH
+if result then
+    filedelete LOCALPATH
+endif
+
+changedir DESTFORDER
+wait ']#'
+scprecv SOURFILE
+; 1秒ごとに端末のファイルサイズを確認し、変動がなくなれば完了としている
+mpause 5000
+sizeBef = 0
+:confirm_start
+    filestat LOCALPATH sizeNow
+    if sizeNow = sizeBef then
+        goto confirm_end
+    else
+        mpause 5000
+    endif
+    sizeBef = sizeNow
+    goto confirm_start
+:confirm_end
+
+
+; 作業フォルダ削除
+H_CMD = ''
+sprintf2 H_CMD 'if [ -d "%s/" ]; then rm -Rf %s; fi' R_TOOL_PATH R_TOOL_PATH
+sendln H_CMD
+
+;; Exit this macro script.
+exit

@@ -1,0 +1,40 @@
+; =================================================
+; 事前作業
+; =================================================
+; ツールフォルダ作成
+H_CMD = ''
+sprintf2 H_CMD 'if [ -d "%s/" ]; then rm -Rf %s; fi' R_TOOL_PATH R_TOOL_PATH
+sendln H_CMD
+
+H_CMD = ''
+sprintf2 H_CMD 'mkdir -p %s/result/' R_TOOL_PATH
+sendln H_CMD
+
+H_CMD = ''
+sprintf2 H_CMD 'mkdir -p %s/files/shell/' R_TOOL_PATH
+sendln H_CMD
+
+
+SOURFILE = SOURFILE1
+DESTFILE = DESTFILE1
+include 'scpsend.ttl'
+
+SOURFILE = SOURFILE2
+DESTFILE = DESTFILE2
+include 'scpsend.ttl'
+
+SOURFILE = SOURFILE3
+DESTFILE = DESTFILE3
+include 'scpsend.ttl'
+
+;; ツールフォルダロール確認
+H_CMD = ''
+sprintf2 H_CMD 'chown -R root:jboxusers %s/' R_TOOL_PATH
+sendln H_CMD
+
+H_CMD = ''
+sprintf2 H_CMD 'chmod -R 775 %s/' R_TOOL_PATH
+sendln H_CMD
+
+;; Exit this macro script.
+exit

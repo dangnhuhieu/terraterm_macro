@@ -1,0 +1,30 @@
+; =================================================
+; scpsend
+; =================================================
+
+; 対象が存在しない場合
+filesearch SOURFILE
+if result = 0 then
+	msg = SOURFILE
+    messagebox msg 'ファイルが存在しない'
+	end
+endif
+
+; ファイル送信
+scpsend SOURFILE DESTFILE
+
+; ファイル送信プロセス確認
+do
+  mpause 5000
+  H_CMD = ''
+  sprintf2 H_CMD 'ps -ef |grep -v grep |grep -c scp'
+  sendln H_CMD
+  waitln '0' '1'
+loop while result != 1
+;; ファイル送信が完了すると次のマクロを実行
+H_CMD = ''
+sprintf2 H_CMD 'echo SCP %s finish' DESTFILE
+sendln H_CMD
+
+;; Exit this macro script.
+exit
