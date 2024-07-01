@@ -1,4 +1,3 @@
 date; uname -n; id
-PGPASSWORD=${EDBPASS}
-psql -t -A -F, -d database -U enterprisedb -f /WORK/SQL_FILE/sql_update_dbmaster.sql
+#list command
 date; uname -n; id
