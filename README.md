@@ -1,4 +1,4 @@
-フォルダ構成は以下の通りです。
+# フォルダ構成は以下の通りです。
 │  end_func.ttl
 │  env.ttl
 │  exec_cmd.ttl
@@ -18,5 +18,5 @@
 └─result
 
 
-・run_macro.batファイルからプログラムを実行する。
-・result：ログフォルダ：
+## run_macro.batファイルからプログラムを実行する。
+## result：ログフォルダ：
