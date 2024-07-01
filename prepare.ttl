@@ -1,7 +1,7 @@
 ; =================================================
-; Ž–‘Oì‹Æ
+; äº‹å‰ä½œæ¥­
 ; =================================================
-; ƒc[ƒ‹ƒtƒHƒ‹ƒ_ì¬
+; ãƒ„ãƒ¼ãƒ«ãƒ•ã‚©ãƒ«ãƒ€ä½œæˆ
 H_CMD = ''
 sprintf2 H_CMD 'if [ -d "%s/" ]; then rm -Rf %s; fi' R_TOOL_PATH R_TOOL_PATH
 sendln H_CMD
@@ -27,9 +27,9 @@ SOURFILE = SOURFILE3
 DESTFILE = DESTFILE3
 include 'scpsend.ttl'
 
-;; ƒc[ƒ‹ƒtƒHƒ‹ƒ_ƒ[ƒ‹Šm”F
+;; ãƒ„ãƒ¼ãƒ«ãƒ•ã‚©ãƒ«ãƒ€ãƒ­ãƒ¼ãƒ«ç¢ºèª
 H_CMD = ''
-sprintf2 H_CMD 'chown -R root:jboxusers %s/' R_TOOL_PATH
+sprintf2 H_CMD 'chown -R root:root %s/' R_TOOL_PATH
 sendln H_CMD
 
 H_CMD = ''
