@@ -20,3 +20,17 @@
 
 ## run_macro.batファイルからプログラムを実行する。
 ## result：ログフォルダ
+
+## envlist.txtサンプル
+# ENVID,HOSTNAME,IPAddr,USER,PASSWORD
+AP1,apdev01,192.168.56.4,root,manager<br />
+AP2,apdev02,192.168.56.5,root,manager<br />
+## cmdlist.txtサンプル
+date; uname -n; id<br />
+systemctl restart httpd<br />
+date; uname -n; id<br />
+
+
+
+
+
