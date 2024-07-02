@@ -22,7 +22,7 @@
 ## result：ログフォルダ
 
 ## envlist.txtサンプル
-# ENVID,HOSTNAME,IPAddr,USER,PASSWORD
+ENVID,HOSTNAME,IPAddr,USER,PASSWORD
 AP1,apdev01,192.168.56.4,root,manager<br />
 AP2,apdev02,192.168.56.5,root,manager<br />
 ## cmdlist.txtサンプル
